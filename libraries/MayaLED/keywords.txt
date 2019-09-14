@@ -1,0 +1,4 @@
+MayaLDR KEYWORD1
+
+debug KEYWORD2
+ativar KEYWORD2
