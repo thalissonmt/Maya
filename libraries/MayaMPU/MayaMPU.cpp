@@ -1,8 +1,10 @@
 #include "MayaMPU.h" 
-	float rollF; //Variaveis do Acelerometro
-	float pitchF;
-	float azF;
-	float m_posicao;
+	float pitchF = 0; //Acelerometro angulo Eixo X
+	float rollF; //Acelerometro angulo Eixo Y
+	float azF, axF, ayF; //Acelerometro aceleracao Eixo Z
+	float accel_magnitude; //modulo dos 3 eixos do acelerometro
+	float mag_posicao; 
+	bool accel_control = false; //Variavel de controle do acelerometro
 
 	MayaMPU::MayaMPU(int pinosda, int pinoscl){
 			periodo_ = 3000;
@@ -18,19 +20,19 @@
 			gyro; //giroscopio
 			baro; //barometro
 			mag; //magnetometro
-			ax = 0; //Eixo X Acelerometro
-			ay = 0; //Eixo Y Acelerometro
-			az = 0;	//Eixo Z Acelerometro
-			gx = 0; //Eixo X Giroscopio
-			gy = 0; //Eixo Y Giroscopio
-			gz = 0; //Eixo Z Giroscopio
-			mx = 0; //Eixo X Magnetometro
-			my = 0; //Eixo Y Magnetometro
-			mz = 0; //Eixo Z Magnetometro
-			temperatura = 0; 
-			pressao = 0;
-			altitude = 0;
-			lastMicros = 0;
+			ax; //Eixo X Acelerometro
+			ay; //Eixo Y Acelerometro
+			az;	//Eixo Z Acelerometro
+			gx; //Eixo X Giroscopio
+			gy; //Eixo Y Giroscopio
+			gz; //Eixo Z Giroscopio
+			mx; //Eixo X Magnetometro
+			my; //Eixo Y Magnetometro
+			mz; //Eixo Z Magnetometro
+			temperatura; 
+			pressao;
+			altitude;
+			lastMicros;
 	}
 	
 	void MayaMPU::setPeriodo(int periodo){
@@ -61,17 +63,24 @@
     	Serial.println(gyro.testConnection() ? "Conexao com GIROSCOPIO bem sucedida" : "Conexao com GIROSCOPIO falhou");
     	Serial.println(baro.testConnection() ? "Conexao com BAROMETRO bem sucedida" : "Conexao com BAROMETRO falhou");
     	Serial.println(mag.testConnection() ? "Conexao com MAGNETOMETRO bem sucedida" : "Conexao com MAGNETOMETRO falhou");
+    	tempo_ = millis();
 	}
 
 	void converter_g_to_angle(int16_t x, int16_t y, int16_t z){ //Converte o valor do acelerometro em G para Angulo do eixo x e y;
-		float x_out, y_out, roll, pitch;
-		x_out = (float)x/256; //Converte leitura do acelerometro LSB/G para G
-    	y_out = (float)y/256; //Converte leitura do acelerometro LSB/G para G
-    	azF = (float)z/256; //Converte leitura do acelerometro LSB/G para G
-
-    	roll = atan(y_out / sqrt(pow(x_out, 2) + pow(azF, 2))) * 180 / PI; //Angulo eixo Y
-    	pitch = atan(-1 * x_out / sqrt(pow(y_out, 2) + pow(azF, 2))) * 180 / PI; //Angulo eixo X
-
+		float roll, pitch, ax_out, ay_out, az_out;
+		ax_out = (float)x/256; //Converte leitura do acelerometro LSB/G para G
+    	ay_out = (float)y/256; //Converte leitura do acelerometro LSB/G para G
+    	az_out = (float)z/256; //Converte leitura do acelerometro LSB/G para G
+    	if((ax_out || az_out) != 0){
+	    	roll = atan(ay_out / sqrt(pow(ax_out, 2) + pow(az_out, 2))) * 180 / PI; //Angulo eixo Y
+    	}
+	    if((ay_out || az_out) != 0){
+	    	pitch = atan(-1 * ax_out / sqrt(pow(ay_out, 2) + pow(az_out, 2))) * 180 / PI; //Angulo eixo X
+	    }	
+	    axF = 0.94 * axF + 0.06 * ax_out;
+	    ayF = 0.94 * ayF + 0.06 * ay_out;
+	    azF = az_out;
+	    accel_magnitude = sqrt(axF*axF+ayF*ayF+azF*azF); //Modulo dos 3 eixos
     	rollF = 0.94 * rollF + 0.06 * roll; //Filtro para suavizar a variação do angulo do eixo Y
    		pitchF = 0.94 * pitchF + 0.06 * pitch; //Filtro para suavizar a variação do angulo do eixo X
 	}
@@ -79,6 +88,14 @@
 	void MayaMPU::acelerometro(){
    		accel.getAcceleration(&ax, &ay, &az); //Recebe os valores do acelerometro em LSB/g
 		converter_g_to_angle(ax, ay, az);
+
+		if(accel_magnitude>1.25 && !accel_control){
+    		passos_++;
+    		accel_control = true;
+    	}
+    	if(accel_magnitude<=1.25 && accel_control){
+    		accel_control = false;
+    	}
 	}
 
 	void MayaMPU::giroscopio(){
@@ -107,11 +124,11 @@
 	void MayaMPU::magneto(){
 	    mag.getHeading(&mx, &my, &mz); //Recebe os valores do magnetometro
 	    
-	    m_posicao = atan2(my, mx); //calcular a posição em graus, 0 graus indica Norte
-	    if(m_posicao < 0)
-	      m_posicao += 2 * M_PI;
+	    mag_posicao = atan2(my, mx); //calcular a posição em graus, 0 graus indica Norte
+	    if(mag_posicao < 0)
+	      mag_posicao += 2 * M_PI;
 
-	  	m_posicao *= 180/M_PI; 
+	  	mag_posicao *= 180/M_PI; 
 	}
 	
 	void MayaMPU::ativar(int tipo){
@@ -131,28 +148,16 @@
 				deitado_++;
 			}
 
-			if(tipo == 1){
-			    Serial.print("Acelerometro:\t");
-			    Serial.print(pitchF); Serial.print("\t");
-			    Serial.print(empe_); Serial.print("\t");
-			    Serial.print(sentado_); Serial.print("\t");
-			    Serial.print(deitado_); Serial.print("\n");
-			    // Serial.print("Velocidade Angular:\t");
-			    // Serial.print(gx); Serial.print("\t");
-			    // Serial.print(gy); Serial.print("\t");
-			    // Serial.println(gz); Serial.print("\n");
-	    		// Serial.print("Temperatura:\t");
-	    		// Serial.print(temperatura); Serial.print("\n");
-	    		// Serial.print("Pressao:\t");
-	    		// Serial.print(pressao); Serial.print("\n");
-	    		// Serial.print("Altitude:\t");
-	    		// Serial.print(altitude); Serial.print("\n");
-	    		// Serial.print("Magnetometro:\t");
-	    		// Serial.print(mx); Serial.print("\t");
-	    		// Serial.print(my); Serial.print("\t");
-	    		// Serial.print(mz); Serial.print("\n");
-	    		// Serial.print("Bussula:\t");
-	    		// Serial.print(m_posicao); Serial.print("\n");
-			}
+		}
+		if(tipo == 1){
+		    //Serial.print("Acelerometro:\t");
+		    Serial.print(accel_magnitude); Serial.print(",");
+		   // Serial.print(axF); Serial.print(",");
+		   // Serial.print(ayF); Serial.print(",");
+		   // Serial.print(azF); Serial.print(",");
+		    //Serial.print(empe_); Serial.print("\t");
+		    //Serial.print(sentado_); Serial.print("\t");
+		    //Serial.print(deitado_); Serial.print("\t");
+		    Serial.print(passos_); Serial.print("\n");
 		}
 	}
