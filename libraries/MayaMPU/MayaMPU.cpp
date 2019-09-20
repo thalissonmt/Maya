@@ -1,5 +1,8 @@
 #include "MayaMPU.h" 
-	float roll, pitch, rollF, pitchF, m_posicao; //Variaveis do Acelerometro
+	float rollF; //Variaveis do Acelerometro
+	float pitchF;
+	float azF;
+	float m_posicao;
 
 	MayaMPU::MayaMPU(int pinosda, int pinoscl){
 			periodo_ = 3000;
@@ -21,13 +24,13 @@
 			gx = 0; //Eixo X Giroscopio
 			gy = 0; //Eixo Y Giroscopio
 			gz = 0; //Eixo Z Giroscopio
+			mx = 0; //Eixo X Magnetometro
+			my = 0; //Eixo Y Magnetometro
+			mz = 0; //Eixo Z Magnetometro
 			temperatura = 0; 
 			pressao = 0;
 			altitude = 0;
 			lastMicros = 0;
-			mx = 0; //Eixo X Magnetometro
-			my = 0; //Eixo Y Magnetometro
-			mz = 0; //Eixo Z Magnetometro
 	}
 	
 	void MayaMPU::setPeriodo(int periodo){
@@ -61,13 +64,13 @@
 	}
 
 	void converter_g_to_angle(int16_t x, int16_t y, int16_t z){ //Converte o valor do acelerometro em G para Angulo do eixo x e y;
-		float x_out, y_out, z_out;
+		float x_out, y_out, roll, pitch;
 		x_out = (float)x/256; //Converte leitura do acelerometro LSB/G para G
     	y_out = (float)y/256; //Converte leitura do acelerometro LSB/G para G
-    	z_out = (float)z/256; //Converte leitura do acelerometro LSB/G para G
+    	azF = (float)z/256; //Converte leitura do acelerometro LSB/G para G
 
-    	roll = atan(y_out / sqrt(pow(x_out, 2) + pow(z_out, 2))) * 180 / PI; //Angulo eixo Y
-    	pitch = atan(-1 * x_out / sqrt(pow(y_out, 2) + pow(z_out, 2))) * 180 / PI; //Angulo eixo X
+    	roll = atan(y_out / sqrt(pow(x_out, 2) + pow(azF, 2))) * 180 / PI; //Angulo eixo Y
+    	pitch = atan(-1 * x_out / sqrt(pow(y_out, 2) + pow(azF, 2))) * 180 / PI; //Angulo eixo X
 
     	rollF = 0.94 * rollF + 0.06 * roll; //Filtro para suavizar a variação do angulo do eixo Y
    		pitchF = 0.94 * pitchF + 0.06 * pitch; //Filtro para suavizar a variação do angulo do eixo X
@@ -116,15 +119,24 @@
 		//giroscopio();
 		//barometro();
 		//magneto();
-
-		/*if( millis() >  tempo_ + periodo_ ){
+		
+		if( millis() >  tempo_ + periodo_ ){
 			tempo_ = millis();
-		}*/
+
+			if(pitchF>-30 && pitchF<30 && rollF>-30 && rollF<30 && azF>0){
+				empe_++;
+			}else if(pitchF>30 && rollF>-30 && rollF<30 && azF>0){
+				sentado_++;
+			}else{
+				deitado_++;
+			}
 
 			if(tipo == 1){
 			    Serial.print("Acelerometro:\t");
-			    Serial.print(rollF); Serial.print("\t");
-			    Serial.print(pitchF); Serial.print("\n");
+			    Serial.print(pitchF); Serial.print("\t");
+			    Serial.print(empe_); Serial.print("\t");
+			    Serial.print(sentado_); Serial.print("\t");
+			    Serial.print(deitado_); Serial.print("\n");
 			    // Serial.print("Velocidade Angular:\t");
 			    // Serial.print(gx); Serial.print("\t");
 			    // Serial.print(gy); Serial.print("\t");
@@ -142,4 +154,5 @@
 	    		// Serial.print("Bussula:\t");
 	    		// Serial.print(m_posicao); Serial.print("\n");
 			}
+		}
 	}

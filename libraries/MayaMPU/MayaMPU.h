@@ -38,13 +38,13 @@
 			int16_t gx; //Eixo X Giroscopio
 			int16_t gy; //Eixo Y Giroscopio
 			int16_t gz; //Eixo Z Giroscopio
+			int16_t mx; //Eixo X Magnetometro
+			int16_t my; //Eixo Y Magnetometro
+			int16_t mz; //Eixo Z Magnetometro
 			float temperatura; 
 			float pressao;
 			float altitude;
 			int32_t lastMicros;
-			int16_t mx; //Eixo X Magnetometro
-			int16_t my; //Eixo Y Magnetometro
-			int16_t mz; //Eixo Z Magnetometro
 			ADXL345 accel; //Acelerometro
 			L3G4200D gyro; //Gyroscopio
 			BMP085 baro; //Barometro
