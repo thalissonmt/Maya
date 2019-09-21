@@ -1,7 +1,7 @@
 #include "MayaMPU.h" 
-	float pitchF = 0; //Acelerometro angulo Eixo X
+	float pitchF; //Acelerometro angulo Eixo X
 	float rollF; //Acelerometro angulo Eixo Y
-	float azF, axF, ayF; //Acelerometro aceleracao Eixo Z
+	float azF, axF, ayF; //Acelerometro, aceleracao dos Eixos
 	float accel_magnitude; //modulo dos 3 eixos do acelerometro
 	float mag_posicao; 
 	bool accel_control = false; //Variavel de controle do acelerometro
@@ -79,22 +79,29 @@
 	    }	
 	    axF = 0.94 * axF + 0.06 * ax_out;
 	    ayF = 0.94 * ayF + 0.06 * ay_out;
-	    azF = az_out;
+	    azF = 0.8 * azF + 0.2 * az_out;
 	    accel_magnitude = sqrt(axF*axF+ayF*ayF+azF*azF); //Modulo dos 3 eixos
     	rollF = 0.94 * rollF + 0.06 * roll; //Filtro para suavizar a variação do angulo do eixo Y
    		pitchF = 0.94 * pitchF + 0.06 * pitch; //Filtro para suavizar a variação do angulo do eixo X
 	}
 
 	void MayaMPU::acelerometro(){
+		static int time = millis();
+   		
    		accel.getAcceleration(&ax, &ay, &az); //Recebe os valores do acelerometro em LSB/g
 		converter_g_to_angle(ax, ay, az);
 
-		if(accel_magnitude>1.25 && !accel_control){
-    		passos_++;
-    		accel_control = true;
+		if(accel_magnitude>1.25){ //Modulos dos eixos maior que 1.25g
+    		time = millis();
+    		if(!accel_control){
+    			accel_control = true;
+    			passos_++;
+    		}
     	}
-    	if(accel_magnitude<=1.25 && accel_control){
-    		accel_control = false;
+    	if(accel_magnitude<1.25 && accel_control){
+    		if((millis()-time)>200){ //espera 200ms para diminuir a quantidade de passos falsos
+    			accel_control = false;
+    		}
     	}
 	}
 
@@ -150,14 +157,10 @@
 
 		}
 		if(tipo == 1){
-		    //Serial.print("Acelerometro:\t");
-		    Serial.print(accel_magnitude); Serial.print(",");
-		   // Serial.print(axF); Serial.print(",");
-		   // Serial.print(ayF); Serial.print(",");
-		   // Serial.print(azF); Serial.print(",");
-		    //Serial.print(empe_); Serial.print("\t");
-		    //Serial.print(sentado_); Serial.print("\t");
-		    //Serial.print(deitado_); Serial.print("\t");
-		    Serial.print(passos_); Serial.print("\n");
+		    Serial.print(accel_magnitude); Serial.print("\t");
+		    Serial.print(passos_); Serial.print("\t");
+		    Serial.print(empe_); Serial.print("\t");
+		    Serial.print(sentado_); Serial.print("\t");
+		    Serial.print(deitado_); Serial.print("\n");
 		}
 	}
