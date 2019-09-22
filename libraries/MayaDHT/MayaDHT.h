@@ -10,7 +10,6 @@
 			void setPeriodo(int periodo);
 			void setTempo(int tempo);
 			void ativar(int tipo);
-			void inicializar();
 			int (&getDados(int (&dados)[2])) [2];
 	
 		private:

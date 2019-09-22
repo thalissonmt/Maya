@@ -8,6 +8,16 @@
 		data_;
 		ssid_ = ssid;
 		password_ = password;
+		periodo_ = 3000;
+		tempo_ = 0;
+	}
+
+	void MayaNET::setPeriodo(int periodo){
+		periodo_ = periodo;
+	}
+	
+	void MayaNET::setTempo(int tempo){
+		tempo_ = tempo;
 	}
 
 	void MayaNET::inicializar(){
@@ -20,16 +30,6 @@
 		timeClient.forceUpdate();
 	}
 
-	void MayaNET::ativar(int tipo){
-		timeClient.update();
-
-		if(tipo == 1){
-			Serial.print("Data: ");
-  			Serial.print(receberData()); Serial.print("\t");
-  			Serial.print("Hora: ");
-  			Serial.print(receberHora()); Serial.print("\n");
-		}
-	}
 
 	String MayaNET::receberData(){
 		int splitString;
@@ -44,4 +44,18 @@
 
 	unsigned long MayaNET::receberEpoch(){
 		return timeClient.getEpochTime();
+	}
+	
+	void MayaNET::ativar(int tipo){
+		timeClient.update();
+
+		if( millis() >  tempo_ + periodo_ ){
+			tempo_  = millis();
+			if(tipo == 1){
+				Serial.print("Data: ");
+	  			Serial.print(receberData()); Serial.print("\t");
+	  			Serial.print("Hora: ");
+	  			Serial.print(receberHora()); Serial.print("\n");
+			}
+		}
 	}

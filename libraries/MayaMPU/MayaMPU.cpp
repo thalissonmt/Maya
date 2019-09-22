@@ -156,10 +156,15 @@
 			}
 
 			if(tipo == 1){
+				Serial.print("Magnitude Acel: ");
 			    Serial.print(accel_magnitude); Serial.print("\t");
+			    Serial.print("Passos: ");
 			    Serial.print(passos_); Serial.print("\t");
+			    Serial.print("Em pe: ");
 			    Serial.print(empe_); Serial.print("\t");
+			    Serial.print("Sentado: ");
 			    Serial.print(sentado_); Serial.print("\t");
+			    Serial.print("Deitado: ");
 			    Serial.print(deitado_); Serial.print("\n");
 			}
 		}
