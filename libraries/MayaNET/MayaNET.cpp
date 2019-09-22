@@ -17,6 +17,7 @@
     		delay(500);
   		}
 		timeClient.begin();
+		timeClient.forceUpdate();
 	}
 
 	void MayaNET::ativar(int tipo){
@@ -39,4 +40,8 @@
 
 	String MayaNET::receberHora(){
 		return timeClient.getFormattedTime();
+	}
+
+	unsigned long MayaNET::receberEpoch(){
+		return timeClient.getEpochTime();
 	}

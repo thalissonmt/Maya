@@ -155,12 +155,12 @@
 				deitado_++;
 			}
 
-		}
-		if(tipo == 1){
-		    Serial.print(accel_magnitude); Serial.print("\t");
-		    Serial.print(passos_); Serial.print("\t");
-		    Serial.print(empe_); Serial.print("\t");
-		    Serial.print(sentado_); Serial.print("\t");
-		    Serial.print(deitado_); Serial.print("\n");
+			if(tipo == 1){
+			    Serial.print(accel_magnitude); Serial.print("\t");
+			    Serial.print(passos_); Serial.print("\t");
+			    Serial.print(empe_); Serial.print("\t");
+			    Serial.print(sentado_); Serial.print("\t");
+			    Serial.print(deitado_); Serial.print("\n");
+			}
 		}
 	}

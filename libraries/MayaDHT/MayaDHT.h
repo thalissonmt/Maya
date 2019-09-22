@@ -10,14 +10,15 @@
 			void setPeriodo(int periodo);
 			void setTempo(int tempo);
 			void ativar(int tipo);
+			void inicializar();
 			int (&getDados(int (&dados)[2])) [2];
 	
 		private:
 			int periodo_;
 			int tempo_;
-			int pino_;	
-			unsigned char dht_;
 			float t_;
 			float u_;
+			int pino_;	
+			unsigned char dht_;
 	};    
 #endif

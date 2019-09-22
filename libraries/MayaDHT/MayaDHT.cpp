@@ -24,20 +24,29 @@
 	}
 	
 	void MayaDHT::ativar(int tipo){
-		if( millis() >  tempo_ + periodo_ ){
-			tempo_        = millis();
-			DHT dht(pino_, dht_);
-			dht.begin();
+		static int time_init = millis();
+		DHT dht(pino_, dht_);
+		dht.begin();
+
+		if((millis()-time_init)>2000){ //O sensor retorna nova leitura a cada 2s
 			u_ = dht.readHumidity();
 			t_ = dht.readTemperature();
+			time_init = millis();
+		}
+			
+		if( millis() >  tempo_ + periodo_ ){
+			tempo_  = millis();
 			
 			if(tipo == 1){
-				Serial.println("[TEMPERATURA - POR MINUTO]");
-				Serial.print("Temperatura: ");
-				Serial.println(t_);
-				Serial.print("Umidade: ");
-				Serial.println(u_);
-				Serial.println("");
+				if (isnan(u_) || isnan(t_)) {
+					Serial.println(F("Failed to read from DHT sensor!"));
+				}else{
+					Serial.print(F("Umidade: "));
+					  Serial.print(u_);
+					  Serial.print(F("%  Temperatura: "));
+					  Serial.print(t_);
+					  Serial.print(F("°C ")); Serial.print("\n");
+				}
 			}
 		}
 	}

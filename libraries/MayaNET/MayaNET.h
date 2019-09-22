@@ -12,6 +12,7 @@
 			void ativar(int tipo);
 			String receberData();
 			String receberHora();
+			unsigned long receberEpoch();
 		private:
 			String data_;
 			const char* ssid_;
