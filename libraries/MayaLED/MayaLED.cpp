@@ -1,49 +1,111 @@
 #include "MayaLED.h"
 
-  MayaLED::MayaLED(int pinoR, int pinoG, int pinoB){
-    red   = pinoR;
-    green = pinoG;
-    blue  = pinoB;
-    
-    pinMode(blue, OUTPUT);
-    pinMode(green, OUTPUT);
-    pinMode(red, OUTPUT);
+    MayaLED::MayaLED(int pinoR, int pinoG, int pinoB){
+        red   = pinoR;
+        green = pinoG;
+        blue  = pinoB;
+    }
 
-  }
+    void MayaLED::inicializar(){
+        pinMode(blue, OUTPUT);
+        pinMode(green, OUTPUT);
+        pinMode(red, OUTPUT);
 
-  void MayaLED::vermelho(){
-    digitalWrite(red, HIGH);
-    digitalWrite(green, LOW);
-    digitalWrite(blue, LOW);
-  }
+        ledcSetup(LED_CHANNEL_1, FREQUENCIA, RESOLUCAO); //Confiurar canal PWM
+        ledcSetup(LED_CHANNEL_2, FREQUENCIA, RESOLUCAO);
+        ledcSetup(LED_CHANNEL_3, FREQUENCIA, RESOLUCAO);
 
-  void MayaLED::azul(){
-    digitalWrite(blue, HIGH);
-    digitalWrite(green, LOW);
-    digitalWrite(red, LOW);
-  }
+        ledcAttachPin(red, LED_CHANNEL_1); //Atribuir canal PWM ao pino
+        ledcAttachPin(green, LED_CHANNEL_2);
+        ledcAttachPin(blue, LED_CHANNEL_3);
+    }
 
-  void MayaLED::verde(){
-    digitalWrite(blue, LOW);
-    digitalWrite(green, HIGH);
-    digitalWrite(red, LOW);
-  }
+    void MayaLED::vermelho(int brilho){
+        if(brilho){
+            ledcWrite(LED_CHANNEL_1, 200);
+            ledcWrite(LED_CHANNEL_2, 1024);
+            ledcWrite(LED_CHANNEL_3, 1024);
+        }else{
+            ledcWrite(LED_CHANNEL_1, 920);
+            ledcWrite(LED_CHANNEL_2, 1024);
+            ledcWrite(LED_CHANNEL_3, 1024); 
+        }
+    }
 
-/*
-  void MayaLED::amarelo(){
-    analogWrite(blue, 0);
-    analogWrite(green, 50);
-    analogWrite(red, 255);
-  }
+    void MayaLED::azul(int brilho){
+        if(brilho){
+            ledcWrite(LED_CHANNEL_1, 1024);
+            ledcWrite(LED_CHANNEL_2, 1024);
+            ledcWrite(LED_CHANNEL_3, 200);
+        }else{
+            ledcWrite(LED_CHANNEL_1, 1024);
+            ledcWrite(LED_CHANNEL_2, 1024);
+            ledcWrite(LED_CHANNEL_3, 920); 
+        }
+    }
 
-  void MayaLED::roxo(){
-    analogWrite(blue, 207);
-    analogWrite(green, 0);
-    analogWrite(red, 255);
-  }*/
+    void MayaLED::verde(int brilho){
+        if(brilho){
+            ledcWrite(LED_CHANNEL_1, 1024);
+            ledcWrite(LED_CHANNEL_2, 200);
+            ledcWrite(LED_CHANNEL_3, 1024); 
+        }else{
+            ledcWrite(LED_CHANNEL_1, 1024);
+            ledcWrite(LED_CHANNEL_2, 920);
+            ledcWrite(LED_CHANNEL_3, 1024); 
+        }
+    }
 
-  void MayaLED::branco(){
-    digitalWrite(blue, HIGH);
-    digitalWrite(green, HIGH);
-    digitalWrite(red, HIGH);
-  }
+    void MayaLED::amarelo(int brilho){
+        if(brilho){
+            ledcWrite(LED_CHANNEL_1, 200);
+            ledcWrite(LED_CHANNEL_2, 200);
+            ledcWrite(LED_CHANNEL_3, 1024);
+        }else{
+            ledcWrite(LED_CHANNEL_1, 920);
+            ledcWrite(LED_CHANNEL_2, 920);
+            ledcWrite(LED_CHANNEL_3, 1024);  
+        }
+    }
+
+    void MayaLED::magenta(int brilho){
+        if(brilho){
+            ledcWrite(LED_CHANNEL_1, 200);
+            ledcWrite(LED_CHANNEL_2, 1024);
+            ledcWrite(LED_CHANNEL_3, 200); 
+        }else{
+            ledcWrite(LED_CHANNEL_1, 920);
+            ledcWrite(LED_CHANNEL_2, 1024);
+            ledcWrite(LED_CHANNEL_3, 920); 
+        }
+    }
+
+    void MayaLED::ciano(int brilho){
+        if(brilho){
+            ledcWrite(LED_CHANNEL_1, 1024);
+            ledcWrite(LED_CHANNEL_2, 200);
+            ledcWrite(LED_CHANNEL_3, 200); 
+        }else{
+            ledcWrite(LED_CHANNEL_1, 1024);
+            ledcWrite(LED_CHANNEL_2, 920);
+            ledcWrite(LED_CHANNEL_3, 920);
+        }
+    }
+
+    void MayaLED::branco(int brilho){
+        if(brilho){
+            ledcWrite(LED_CHANNEL_1, 200);
+            ledcWrite(LED_CHANNEL_2, 200);
+            ledcWrite(LED_CHANNEL_3, 200); 
+        }else{
+            ledcWrite(LED_CHANNEL_1, 920);
+            ledcWrite(LED_CHANNEL_2, 920);
+            ledcWrite(LED_CHANNEL_3, 920); 
+        }
+    }
+
+    void MayaLED::desligar(){
+        ledcWrite(LED_CHANNEL_1, 1024);
+        ledcWrite(LED_CHANNEL_2, 1024);
+        ledcWrite(LED_CHANNEL_3, 1024); 
+    }
