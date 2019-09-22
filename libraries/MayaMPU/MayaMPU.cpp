@@ -156,16 +156,16 @@
 			}
 
 			if(tipo == 1){
-				Serial.print("Magnitude Acel: ");
-			    Serial.print(accel_magnitude); Serial.print("\t");
-			    Serial.print("Passos: ");
-			    Serial.print(passos_); Serial.print("\t");
-			    Serial.print("Em pe: ");
-			    Serial.print(empe_); Serial.print("\t");
-			    Serial.print("Sentado: ");
-			    Serial.print(sentado_); Serial.print("\t");
-			    Serial.print("Deitado: ");
-			    Serial.print(deitado_); Serial.print("\n");
+				Serial.println("[POSIÇAO - POR MINUTO]");
+		        Serial.print("Em pé: ");
+		        Serial.println(empe_);
+		        Serial.print("Sentado: ");
+		        Serial.println(sentado_);
+		        Serial.print("Deitado: ");
+		        Serial.println(deitado_);
+		        Serial.print("Passos: ");
+		        Serial.println(passos_);
+		        Serial.println("");
 			}
 		}
 	}

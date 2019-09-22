@@ -41,11 +41,13 @@
 				if (isnan(u_) || isnan(t_)) {
 					Serial.println(F("Failed to read from DHT sensor!"));
 				}else{
+					Serial.println("[TEMPERATURA - POR MINUTO]");
 					Serial.print(F("Umidade: "));
-					  Serial.print(u_);
-					  Serial.print(F("%  Temperatura: "));
-					  Serial.print(t_);
-					  Serial.print(F("°C ")); Serial.print("\n");
+					Serial.print(u_);
+					Serial.print(F("%  Temperatura: "));
+					Serial.print(t_);
+					Serial.println("°C ");
+					Serial.println("");
 				}
 			}
 		}

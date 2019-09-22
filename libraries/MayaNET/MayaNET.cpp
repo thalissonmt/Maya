@@ -2,7 +2,7 @@
 	
 	WiFiMulti WiFiMulti;
 	WiFiUDP ntpUDP;
-	NTPClient timeClient(ntpUDP, "a.st1.ntp.br", -10800); //(UDP, "seridor_ntp", timezone em s)
+	NTPClient timeClient(ntpUDP, "a.st1.ntp.br", -10800); //(UDP, "servidor_ntp", timezone em s)
 	
 	MayaNET::MayaNET(const char* ssid,const char* password){
 		data_;
@@ -55,7 +55,8 @@
 				Serial.print("Data: ");
 	  			Serial.print(receberData()); Serial.print("\t");
 	  			Serial.print("Hora: ");
-	  			Serial.print(receberHora()); Serial.print("\n");
+	  			Serial.println(receberHora());
+	  			Serial.println("");
 			}
 		}
 	}

@@ -9,6 +9,7 @@
         void setPeriodo(int periodo);
         void setTempo(int tempo);
         void ativar(int tipo);
+        int luminosidade();
         int (&getDados(int (&dados)[3]))[3];
 
       private:

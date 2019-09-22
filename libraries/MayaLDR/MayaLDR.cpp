@@ -17,14 +17,22 @@
     tempo_ = tempo;
   }
 
+  int (&MayaLDR::getDados(int (&dados)[3])) [3]{
+    dados[1] = claro_;
+    dados[2] = sombra_;
+    dados[3] = escuro_;
+    claro_ = sombra_ = escuro_ = 0;
+    return dados;
+  }
+
   void MayaLDR::ativar(int tipo){
     if( millis() >  tempo_ + periodo_ ){
-      luminosidade_ = analogRead(pino_);
       tempo_        = millis();
+      luminosidade_ = analogRead(pino_);
 
-      if ( luminosidade_ >= 0 && luminosidade_ <= 1000 ) {
+      if ( luminosidade_ >= 0 && luminosidade_ <= 300 ) {
         claro_++;
-      } else if (luminosidade_ > 1000 && luminosidade_ <= 3700) {
+      } else if (luminosidade_ > 300 && luminosidade_ <= 3700) {
         sombra_++;
       } else {
         escuro_++;
@@ -45,11 +53,7 @@
     }
   }
 
-  int (&MayaLDR::getDados(int (&dados)[3]))[3] {
-    dados[1] = claro_;
-    dados[2] = sombra_;
-    dados[3] = escuro_;
-    claro_ = sombra_ = escuro_ = 0;
-    return dados;
+  int MayaLDR::luminosidade(){
+    return analogRead(pino_);
   }
 
