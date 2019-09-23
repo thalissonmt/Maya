@@ -11,12 +11,11 @@
 			void setTempo(int tempo);
 			void ativar(int tipo);
 			int (&getDados(int (&dados)[1])) [1];
-			void montar();
+			void inicializar();
 	
 		private:
 			int periodo_;
 			int tempo_;
-			//int batimentos_;
 	};    
 	
 

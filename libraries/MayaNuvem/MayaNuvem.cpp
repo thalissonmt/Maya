@@ -2,7 +2,7 @@
 #include <ArduinoJson.h>  
 #include <HTTPClient.h>
  MayaNuvem::MayaNuvem(){
-    periodo_ = 20000; //20 mintutos = 1200000
+    periodo_ = 3600000; 
     tempo_   = 0;
     url_     = "http://3.88.193.51/joao/send-post.php";
   }

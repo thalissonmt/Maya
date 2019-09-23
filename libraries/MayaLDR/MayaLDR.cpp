@@ -1,7 +1,7 @@
 #include "MayaLDR.h"
 
   MayaLDR::MayaLDR(int pino){
-    periodo_ = 5000; //20 mintutos = 1200000
+    periodo_ = 1000; 
     tempo_   = 0;
     pino_    = pino;
     claro_   = 0;

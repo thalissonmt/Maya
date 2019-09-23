@@ -1,12 +1,12 @@
 #include "MayaTI.h"
 
 	MayaTI::MayaTI(int pino){
-			periodo_ = 0;
+			periodo_ = 1000;
 			tempo_ = 0;
 			pino_ = pino;
 			temperatura_ = 0;
 	}
-	
+
 	void MayaTI::setPeriodo(int periodo){
 		periodo_ = periodo;
 	}
@@ -15,27 +15,28 @@
 		tempo_ = tempo;
 	}
 	
-	int (&MayaTI::getDados(int (&dados)[1])) [1]{
+	float (&MayaTI::getDados(float (&dados)[1])) [1]{
 		dados[1] = temperatura_;
 		return dados;
 	}
 	
 	void MayaTI::ativar(int tipo){
+		OneWire pino(pino_);
+		DallasTemperature barramento(&pino);
+		DeviceAddress sensor;
+		barramento.begin();
+  		barramento.getAddress(sensor, 0); 
+
 		if( millis() >  tempo_ + periodo_ ){
 			tempo_        = millis();
-			OneWire ourWire(pino_);
-			DallasTemperature sensors(&ourWire);
-			sensors.begin();
-			sensors.requestTemperatures();
-			temperatura_ = sensors.getTempCByIndex(0);
-		}
+			barramento.requestTemperatures(); 
+  			temperatura_ = barramento.getTempC(sensor);
 			
-		if(tipo == 1){
-			Serial.println("[TEMPERATURA]");
-			Serial.println("[INTERNA]");
-			Serial.print("Temperatura: ");
-			Serial.println(temperatura_);
-			Serial.println("");
-		}
+			if(tipo == 1){
+				Serial.println("[TEMPERATURA INTERNA]");
+				Serial.println(temperatura_);
+				Serial.println("");
+			}
+		}	
 		
 	}

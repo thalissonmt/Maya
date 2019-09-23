@@ -8,7 +8,7 @@
 		data_;
 		ssid_ = ssid;
 		password_ = password;
-		periodo_ = 3000;
+		periodo_ = 1000;
 		tempo_ = 0;
 	}
 

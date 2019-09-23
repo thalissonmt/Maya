@@ -1,5 +1,0 @@
-﻿Biblioteca e exemplo do GY801 - https://blog.jongallant.com/2016/06/gy801-data/
-Accelerometer Tutorial - https://howtomechatronics.com/tutorials/arduino/how-to-track-orientation-with-arduino-and-adxl345-accelerometer/
-App para gerar cubo 3D - https://processing.org/
-Pedômetro - https://www.instructables.com/id/Simple-Easy-and-Cheap-DIY-Pedometer-with-Arduino/
-Aceleração dos eixos - https://physics.stackexchange.com/questions/41653/how-do-i-get-the-total-acceleration-from-3-axes

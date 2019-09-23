@@ -1,7 +1,7 @@
 #include "MayaDHT.h"
 
 	MayaDHT::MayaDHT(int pino, unsigned char dht){
-		periodo_ = 3000;
+		periodo_ = 1000;
 		tempo_ = 0;
 		pino_ = pino;
 		dht_ = dht;
@@ -17,8 +17,8 @@
 		tempo_ = tempo;
 	}
 
-	int (&MayaDHT::getDados(int (&dados)[2])) [2]{
-		dados[1] = t_;
+	float (&MayaDHT::getDados(float (&dados)[2])) [2]{
+		dados[1] = t_-3.4;
 		dados[2] = u_;
 		return dados;
 	}

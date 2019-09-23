@@ -2,7 +2,7 @@
     #define MAYATI_H
     #include <Arduino.h>
 	#include <OneWire.h>
-	#include <DallasTemperature.h>
+    #include <DallasTemperature.h>
 	
 	
     class MayaTI{
@@ -12,12 +12,12 @@
         void setPeriodo(int periodo);
         void setTempo(int tempo);
         void ativar(int tipo);
-        int (&getDados(int (&dados)[1]))[1];
+        float (&getDados(float (&dados)[1]))[1];
 
       private:
         int periodo_;
         int tempo_;
         int pino_;
-        int temperatura_;
+        float temperatura_;
     };
 #endif

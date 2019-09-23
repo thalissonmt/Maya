@@ -7,7 +7,7 @@
 	bool accel_control = false; //Variavel de controle do acelerometro
 
 	MayaMPU::MayaMPU(int pinosda, int pinoscl){
-			periodo_ = 3000;
+			periodo_ = 1000;
 			tempo_ = 0;
 			pinosda_ = pinosda;
 			pinoscl_ = pinoscl;
@@ -99,7 +99,7 @@
     		}
     	}
     	if(accel_magnitude<1.25 && accel_control){
-    		if((millis()-time)>200){ //espera 200ms para diminuir a quantidade de passos falsos
+    		if((millis()-time)>220){ //espera 220ms para diminuir a quantidade de passos falsos
     			accel_control = false;
     		}
     	}
@@ -149,7 +149,7 @@
 
 			if(pitchF>-30 && pitchF<30 && rollF>-30 && rollF<30 && azF>0){
 				empe_++;
-			}else if(pitchF>30 && rollF>-30 && rollF<30 && azF>0){
+			}else if(rollF>30 && pitchF>-30 && pitchF<30 && azF>0){
 				sentado_++;
 			}else{
 				deitado_++;
@@ -157,6 +157,10 @@
 
 			if(tipo == 1){
 				Serial.println("[POSIÇAO - POR MINUTO]");
+				Serial.print("pitch: ");
+				Serial.print(pitchF);
+				Serial.print(" roll: ");
+				Serial.println(rollF);
 		        Serial.print("Em pé: ");
 		        Serial.println(empe_);
 		        Serial.print("Sentado: ");
