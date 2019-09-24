@@ -4,17 +4,18 @@
 #include <MayaLED.h>    //FUNCIONANDO
 #include <MayaLDR.h>    //FUNCIONANDO
 #include <MayaTI.h>     //FUNCIONANDO
-#include <MayaBLE.h>    //FUNCIONANDO
+//#include <MayaBLE.h>    //FUNCIONANDO
 #include <MayaNuvem.h>  //FUNCIONANDO
 #include <ArduinoJson.h>
 
-MayaNET net("MAYA_NET","projetomaya"); //passar como parametro ("nome_da_rede","senha_da_rede")
+//MayaNET net("MAYA_NET","projetomaya"); //passar como parametro ("nome_da_rede","senha_da_rede")
+MayaNET net("iPhone de Thalisson","k0u3jtc2"); 
 MayaMPU mpu(22,21);
 MayaDHT dht(16,DHT11);
 MayaLED led(5,19,23);
 MayaLDR ldr(32);    
 MayaTI ti(4);
-MayaBLE ble;
+//MayaBLE ble;
 MayaNuvem nuvem;
 
 const int dados = JSON_OBJECT_SIZE(17);
@@ -24,6 +25,7 @@ String dataInicio;
 String horaInicio;
 String dataFim;
 String horaFim;
+bool flagTI = false;
 
 void atualizarDataHoraInicio(){
   dataInicio = net.receberData();
@@ -38,7 +40,7 @@ void setup() {
   led.azul(0);
   net.inicializar();
   mpu.inicializar();
-  ble.inicializar();
+ // ble.inicializar();
   
   led.desligar();
 
@@ -53,7 +55,7 @@ void loop() {
   net.ativar(0); 
   dht.ativar(0);
   ti.ativar(0);
-  ble.ativar(0);
+ // ble.ativar(0);
 
   if(nuvem.ativar()){
     dataFim = net.receberData(); //Receber a data de fim da leitura
@@ -84,6 +86,10 @@ void loop() {
 
     float dados_ti[1] = {};
     ti.getDados(dados_ti);
+    if(dados_ti[1]>0){
+      led.verde(0);
+      flagTI = true;
+    }
     Serial.print("TI: "); Serial.print(" Temp_Int: "); Serial.println(dados_ti[1]);
     doc["temp_int"] = dados_ti[1];
     
@@ -92,12 +98,21 @@ void loop() {
     doc["dt_fim"] = dataFim;
     doc["hr_fim"] = horaFim;
 
-    int dados_ble[1] = {};
-    ble.getDados(dados_ble);
-    Serial.print("BLE - Batimento: "); Serial.println(dados_ble[1]);
-    doc["cardiaco"] = dados_ble[1];
+//    int dados_ble[1] = {};
+//    ble.getDados(dados_ble);
+//    Serial.print("BLE - Batimento: "); Serial.println(dados_ble[1]);
+//    doc["cardiaco"] = dados_ble[1];
 
     //nuvem.enviar(doc);
     atualizarDataHoraInicio();
   }
+
+  if(flagTI){
+      float dados_ti[1] = {};
+      ti.getDados(dados_ti);
+      if(dados_ti[1]<0){
+        led.desligar();
+        flagTI = false;
+      }
+  }  
 }
