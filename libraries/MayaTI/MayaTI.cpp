@@ -1,7 +1,7 @@
 #include "MayaTI.h"
 
 	MayaTI::MayaTI(int pino){
-			periodo_ = 1000;
+			periodo_ = 10000;
 			tempo_ = 0;
 			pino_ = pino;
 			temperatura_ = 0;

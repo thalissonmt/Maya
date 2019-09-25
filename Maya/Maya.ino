@@ -45,8 +45,6 @@ void setup() {
   
   led.desligar();
 
-  nuvem.setPeriodo(10000);
-
   atualizarDataHoraInicio();
 }
 
@@ -107,7 +105,7 @@ void loop() {
 //    Serial.print("BLE - Batimento: "); Serial.println(dados_ble[0]);
 //    doc["cardiaco"] = dados_ble[0];
 
-    //nuvem.enviar(doc);
+    nuvem.enviar(doc);
     atualizarDataHoraInicio();
-  } 
+  }
 }

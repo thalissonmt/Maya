@@ -7,7 +7,7 @@
 	bool accel_control = false; //Variavel de controle do acelerometro
 
 	MayaMPU::MayaMPU(int pinosda, int pinoscl){
-			periodo_ = 1000;
+			periodo_ = 60000;
 			tempo_ = 0;
 			pinosda_ = pinosda;
 			pinoscl_ = pinoscl;
@@ -63,7 +63,6 @@
     	Serial.println(gyro.testConnection() ? "Conexao com GIROSCOPIO bem sucedida" : "Conexao com GIROSCOPIO falhou");
     	Serial.println(baro.testConnection() ? "Conexao com BAROMETRO bem sucedida" : "Conexao com BAROMETRO falhou");
     	Serial.println(mag.testConnection() ? "Conexao com MAGNETOMETRO bem sucedida" : "Conexao com MAGNETOMETRO falhou");
-    	tempo_ = millis();
 	}
 
 	void converter_g_to_angle(int16_t x, int16_t y, int16_t z){ //Converte o valor do acelerometro em G para Angulo do eixo x e y;

@@ -1,7 +1,7 @@
 #include "MayaDHT.h"
 
 	MayaDHT::MayaDHT(int pino, unsigned char dht){
-		periodo_ = 1000;
+		periodo_ = 60000;
 		tempo_ = 0;
 		pino_ = pino;
 		dht_ = dht;
