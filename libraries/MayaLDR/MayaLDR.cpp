@@ -18,9 +18,9 @@
   }
 
   int (&MayaLDR::getDados(int (&dados)[3])) [3]{
-    dados[1] = claro_;
-    dados[2] = sombra_;
-    dados[3] = escuro_;
+    dados[0] = claro_;
+    dados[1] = sombra_;
+    dados[2] = escuro_;
     claro_ = sombra_ = escuro_ = 0;
     return dados;
   }

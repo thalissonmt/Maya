@@ -44,10 +44,10 @@
 	}
 	
 	int (&MayaMPU::getDados(int (&dados)[4])) [4]{
-		dados[1] = sentado_;
-		dados[2] = empe_;
-		dados[3] = deitado_;
-		dados[4] = passos_;
+		dados[0] = sentado_;
+		dados[1] = empe_;
+		dados[2] = deitado_;
+		dados[3] = passos_;
 		sentado_ = empe_ = deitado_ = passos_ = 0;
 		return dados;
 	}

@@ -54,7 +54,7 @@
 	}
 	
 	int (&MayaBLE::getDados(int (&dados)[1])) [1]{
-		dados[1] = batimentos_;
+		dados[0] = batimentos_;
 		return dados;
 	}
 	

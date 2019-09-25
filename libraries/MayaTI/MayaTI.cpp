@@ -16,7 +16,7 @@
 	}
 	
 	float (&MayaTI::getDados(float (&dados)[1])) [1]{
-		dados[1] = temperatura_;
+		dados[0] = temperatura_;
 		return dados;
 	}
 	

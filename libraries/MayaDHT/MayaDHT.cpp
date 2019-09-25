@@ -18,8 +18,9 @@
 	}
 
 	float (&MayaDHT::getDados(float (&dados)[2])) [2]{
-		dados[1] = t_-3.4;
-		dados[2] = u_;
+		dados[0] = t_-3.4;
+		dados[1] = u_;
+		t_ = u_ = 0;
 		return dados;
 	}
 	
