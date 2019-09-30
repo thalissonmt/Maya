@@ -25,9 +25,6 @@ float dados_ti;
 
 void atualizarDataHoraInicio(){
   dthrInicio = net.receberEpoch();
-  Serial.print("Inicio: ");
-  Serial.println(dthrInicio);
-  Serial.println("");
   nuvem.setTempo(millis()); //Atualizar o contator para o momento que recebeu a hora 
 }
 
@@ -60,8 +57,6 @@ void loop() {
 
   if(nuvem.ativar()){
     dthrFim = net.receberEpoch(); //Receber a data de fim da leitura
-    Serial.print("Fim: ");
-    Serial.println(dthrFim);
     
     doc["codigo"] = 1;
     

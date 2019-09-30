@@ -102,6 +102,7 @@
     		}
 			tempo_  = millis();
 			if(tipo == 1){
+				atualizarDataHora();
 		  		Serial.print("Data: ");
 				Serial.print(ano_); Serial.print("-");
 				Serial.print(mes_); Serial.print("-");
