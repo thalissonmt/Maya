@@ -15,32 +15,19 @@ MayaLDR ldr(32);
 MayaTI ti(4);
 MayaNuvem nuvem;
 
-const int dados = JSON_OBJECT_SIZE(24);
+const int dados = JSON_OBJECT_SIZE(17);
 StaticJsonDocument<dados> doc;
 
-int anoInicio;
-int mesInicio;
-int diaInicio;
-int horaInicio;
-int minInicio;
-int segInicio;
-int anoFim;
-int mesFim;
-int diaFim;
-int horaFim;
-int minFim;
-int segFim;
+unsigned long dthrInicio;
+unsigned long dthrFim;
 float ti_lida[1] = {};
 float dados_ti;
 
 void atualizarDataHoraInicio(){
-  net.atualizarDataHora();
-  horaInicio = net.receberHora(); 
-  minInicio = net.receberMin(); 
-  segInicio = net.receberSeg(); 
-  anoInicio = net.receberAno(); 
-  mesInicio = net.receberMes(); 
-  diaInicio = net.receberDia(); 
+  dthrInicio = net.receberEpoch();
+  Serial.print("Inicio: ");
+  Serial.println(dthrInicio);
+  Serial.println("");
   nuvem.setTempo(millis()); //Atualizar o contator para o momento que recebeu a hora 
 }
 
@@ -72,13 +59,9 @@ void loop() {
   }
 
   if(nuvem.ativar()){
-    net.atualizarDataHora(); //Receber a data de fim da leitura
-    horaFim = net.receberHora(); 
-    minFim = net.receberMin(); 
-    segFim = net.receberSeg(); 
-    anoFim = net.receberAno(); 
-    mesFim = net.receberMes(); 
-    diaFim = net.receberDia();
+    dthrFim = net.receberEpoch(); //Receber a data de fim da leitura
+    Serial.print("Fim: ");
+    Serial.println(dthrFim);
     
     doc["codigo"] = 1;
     
@@ -109,19 +92,8 @@ void loop() {
       dados_ti = 0;
     }
     
-    doc["ano_ini"] = anoInicio;
-    doc["mes_ini"] = mesInicio;
-    doc["dia_ini"] = diaInicio;
-    doc["hr_ini"] = horaInicio;
-    doc["min_ini"] = minInicio;
-    doc["seg_ini"] = segInicio;
-
-    doc["ano_fim"] = anoFim;
-    doc["mes_fim"] = mesFim;
-    doc["dia_fim"] = diaFim;
-    doc["hr_fim"] = horaFim;
-    doc["min_fim"] = minFim;
-    doc["seg_fim"] = segFim;
+    doc["dthr_ini"] = dthrInicio;
+    doc["dthr_fim"] = dthrFim;
 
     nuvem.enviar(doc);
     atualizarDataHoraInicio();
