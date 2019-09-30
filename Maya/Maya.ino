@@ -4,35 +4,44 @@
 #include <MayaLED.h>    //FUNCIONANDO
 #include <MayaLDR.h>    //FUNCIONANDO
 #include <MayaTI.h>     //FUNCIONANDO
-//#include <MayaBLE.h>    //FUNCIONANDO
 #include <MayaNuvem.h>  //FUNCIONANDO
 #include <ArduinoJson.h>
 
 MayaNET net("MAYA_NET","projetomaya"); //passar como parametro ("nome_da_rede","senha_da_rede")
-//MayaNET net("iPhone de Thalisson","k0u3jtc2"); 
 MayaMPU mpu(22,21);
 MayaDHT dht(16,DHT11);
 MayaLED led(5,19,23);
 MayaLDR ldr(32);    
 MayaTI ti(4);
-//MayaBLE ble;
 MayaNuvem nuvem;
 
-const int dados = JSON_OBJECT_SIZE(17);
+const int dados = JSON_OBJECT_SIZE(24);
 StaticJsonDocument<dados> doc;
 
-String dataInicio;
-String horaInicio;
-String dataFim;
-String horaFim;
+int anoInicio;
+int mesInicio;
+int diaInicio;
+int horaInicio;
+int minInicio;
+int segInicio;
+int anoFim;
+int mesFim;
+int diaFim;
+int horaFim;
+int minFim;
+int segFim;
 float ti_lida[1] = {};
 float dados_ti;
 
 void atualizarDataHoraInicio(){
-  dataInicio = net.receberData();
+  net.atualizarDataHora();
   horaInicio = net.receberHora(); 
+  minInicio = net.receberMin(); 
+  segInicio = net.receberSeg(); 
+  anoInicio = net.receberAno(); 
+  mesInicio = net.receberMes(); 
+  diaInicio = net.receberDia(); 
   nuvem.setTempo(millis()); //Atualizar o contator para o momento que recebeu a hora 
-  Serial.println(horaInicio);
 }
 
 void setup() {
@@ -41,7 +50,6 @@ void setup() {
   led.branco(0);
   net.inicializar();
   mpu.inicializar();
- // ble.inicializar();
   
   led.desligar();
 
@@ -54,7 +62,6 @@ void loop() {
   net.ativar(0); 
   dht.ativar(0);
   ti.ativar(0);
- // ble.ativar(0);
 
   ti.getDados(ti_lida);
   if(ti_lida[0]>0){
@@ -65,8 +72,13 @@ void loop() {
   }
 
   if(nuvem.ativar()){
-    dataFim = net.receberData(); //Receber a data de fim da leitura
-    horaFim = net.receberHora(); //Receber a hora de fim da leitura
+    net.atualizarDataHora(); //Receber a data de fim da leitura
+    horaFim = net.receberHora(); 
+    minFim = net.receberMin(); 
+    segFim = net.receberSeg(); 
+    anoFim = net.receberAno(); 
+    mesFim = net.receberMes(); 
+    diaFim = net.receberDia();
     
     doc["codigo"] = 1;
     
@@ -92,18 +104,24 @@ void loop() {
     doc["passos"]     = dados_mpu[3];
 
     Serial.print("TI: "); Serial.print(" Temp_Int: "); Serial.println(dados_ti);
-    doc["temp_int"] = dados_ti;
-    dados_ti = 0;
+    if(dados_ti>0){
+      doc["temp_int"] = dados_ti;
+      dados_ti = 0;
+    }
     
-    doc["dt_ini"] = dataInicio;
+    doc["ano_ini"] = anoInicio;
+    doc["mes_ini"] = mesInicio;
+    doc["dia_ini"] = diaInicio;
     doc["hr_ini"] = horaInicio;
-    doc["dt_fim"] = dataFim;
-    doc["hr_fim"] = horaFim;
+    doc["min_ini"] = minInicio;
+    doc["seg_ini"] = segInicio;
 
-//    int dados_ble[1] = {};
-//    ble.getDados(dados_ble);
-//    Serial.print("BLE - Batimento: "); Serial.println(dados_ble[0]);
-//    doc["cardiaco"] = dados_ble[0];
+    doc["ano_fim"] = anoFim;
+    doc["mes_fim"] = mesFim;
+    doc["dia_fim"] = diaFim;
+    doc["hr_fim"] = horaFim;
+    doc["min_fim"] = minFim;
+    doc["seg_fim"] = segFim;
 
     nuvem.enviar(doc);
     atualizarDataHoraInicio();
