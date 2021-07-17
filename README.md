@@ -1,5 +1,5 @@
 # Maya
-Hardware para Projeto de mestrado de João Martins
+Firmware para Projeto de mestrado de João Martins
 
 ## Leds Indicativos  
 ### Branco   
